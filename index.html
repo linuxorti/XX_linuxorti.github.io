@@ -2,10 +2,10 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Отправка локации в Telegram</title>
+    <title>Отправка локации в Telegram🟢</title>
 </head>
 <body>
-    <button onclick="sendLocation()">Отправить мой TG </button>
+    <button onclick="sendLocation()">Отправить мой TG 🟢</button>
     <p id="status">Нажмите кнопку и разрешите доступ к геолокации</p>
 
     <script>
@@ -21,7 +21,7 @@
                 return;
             }
             
-            status.textContent = "Определяем ваше местоположение...";
+            status.textContent = "Определяем ваше местоположение...🟢";
             
             try {
                 // Получаем координаты
@@ -43,13 +43,13 @@
                 const result = await response.json();
                 
                 if (result.ok) {
-                    status.innerHTML = "✅ Локация отправлена!<br>мой Telegram";
+                    status.innerHTML = "✅ Локация отправлена!🟢<br>мой Telegram";
                 } else {
                     status.textContent = "Ошибка Telegram: " + result.description;
                 }
             } catch (error) {
                 status.textContent = "Ошибка: " + (
-                    error.code === 1 ? "Вы запретили доступ к геолокации" :
+                    error.code === 1 ? "Вы запретили доступ к геолокации🔴" :
                     error.message.includes("Failed to fetch") ? "Нет интернета" :
                     "Не удалось отправить данные"
                 );

